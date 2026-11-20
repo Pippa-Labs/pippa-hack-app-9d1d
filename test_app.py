@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import pytest
 from pippa_agentapp_sdk import LocalRunner, OutputShapeViolation
 
-from app import JOKES, MEMES, App, NoCaption, NoDescription, NoMatchingMeme, encode_line
+from app import JOKES, MEMES, App, NoMatchingMeme, encode_line, joke_url
 
 NOW = datetime(2026, 11, 20, 12, 0, tzinfo=timezone.utc)
 
@@ -66,15 +66,11 @@ def test_it_returns_links_and_runners_up():
     assert len(data["other_matches"]) <= 3
 
 
-def test_no_description_is_refused_with_a_hint():
-    with pytest.raises(NoDescription) as failure:
-        call({"description": ""})
-    assert "Describe the meme" in failure.value.user_message
-
-
-def test_a_missing_description_is_refused_too():
-    with pytest.raises(NoDescription):
-        call({})
+def test_no_description_gets_a_funny_meme_instead_of_an_error():
+    for inputs in ({"description": ""}, {}):
+        data = call(inputs).data
+        assert data["image_url"] in {joke_url(j) for j in JOKES}
+        assert "caption_url" not in data
 
 
 def test_an_unknown_meme_says_so_rather_than_guessing():
@@ -86,8 +82,7 @@ def test_an_unknown_meme_says_so_rather_than_guessing():
 def test_picked_by_name_it_answers_and_refuses_as_usual():
     picked = call({"description": "dog in a burning room"}, explicit=True)
     assert picked.data == call({"description": "dog in a burning room"}).data
-    with pytest.raises(NoDescription):
-        call({"description": ""}, explicit=True)
+    assert call({"description": ""}, explicit=True).data["image_url"]
 
 
 def test_the_runner_enforces_the_manifest(monkeypatch):
@@ -153,23 +148,30 @@ def test_caption_text_is_escaped_for_memegen(raw, encoded):
     assert encode_line(raw) == encoded
 
 
-def test_making_needs_words():
-    with pytest.raises(NoCaption) as failure:
-        make("drake", "")
-    assert "words" in failure.value.user_message
-    with pytest.raises(NoCaption):
-        make("drake", " / ")
+def test_make_me_a_funny_meme_sends_one_from_the_bank():
+    """The first thing a new person types. It must answer with a meme."""
+    for meme in ("", "funny", "a random one"):
+        for text in ("", " / "):
+            data = make(meme, text).data
+            assert data["image_url"] in {joke_url(j) for j in JOKES}
+    assert call({}, "meme.make").data["image_url"]
 
 
-def test_making_needs_a_meme():
-    with pytest.raises(NoDescription) as failure:
-        make("", "some words")
-    assert "which meme" in failure.value.user_message
+def test_a_named_meme_with_no_words_uses_that_meme_from_the_bank():
+    data = make("drake", "").data
+    assert data["image_url"].startswith("https://api.memegen.link/images/drake/")
 
 
-def test_making_an_unknown_meme_says_so():
-    with pytest.raises(NoMatchingMeme):
-        make("bananas in pyjamas", "hello / there")
+def test_words_with_no_meme_go_on_drake():
+    data = make("", "doing homework / building apps").data
+    assert data["image_url"] == (
+        "https://api.memegen.link/images/drake/doing_homework/building_apps.png"
+    )
+
+
+def test_words_on_an_unknown_meme_go_on_drake_too():
+    result = make("bananas in pyjamas", "hello / there")
+    assert result.data["image_url"].startswith("https://api.memegen.link/images/drake/")
 
 
 def test_making_picked_by_name_works_the_same():

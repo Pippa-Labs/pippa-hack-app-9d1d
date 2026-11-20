@@ -69,7 +69,7 @@ app:
   # your "latest" version is simply the one you pushed most recently.
   # docs/REVIEW_AND_SHARING.md says which version you, your testers and
   # everybody else get.
-  version: 0.4.6
+  version: 0.4.7
   # One or two sentences, written for someone deciding whether to install it.
   # Say what it does and what it sends anywhere. Never use the word "by" — the
   # badge Pippa shows is parsed from "[via <name> <version> by <author name>]"
@@ -132,6 +132,7 @@ outcomes:
         description: A link to the blank meme picture.
       - name: caption_url
         type: string
+        required: false
         description: A link where the person can add their own text to it.
       - name: shows
         type: string
@@ -153,7 +154,7 @@ outcomes:
       - put my words on a meme
       - make a meme that says
       - turn this into a meme
-      - make me a custom meme
+      - make a meme with my own words
       - write on the meme
     inputs:
       - name: meme
@@ -232,6 +233,7 @@ outcomes:
   - id: meme.random
     summary: Send a random funny ready-made meme about Imperial student life, London or Pippa
     example_phrases:
+      - make me a funny meme
       - generate funny imperial student meme
       - generate a funny imperial college meme
       - funny london meme

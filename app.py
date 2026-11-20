@@ -186,6 +186,35 @@ def caption_url(meme: dict, lines: list[str]) -> str:
     return f"{MEMEGEN}custom/{path}.png?{query}"
 
 
+def joke_url(joke: dict) -> str:
+    path = "/".join(encode_line(line) for line in joke["lines"])
+    return f"{MEMEGEN}{joke['template']}/{path}.png"
+
+
+def pick_joke(call: Call, pool: list[dict] | None = None) -> tuple[dict, str, str]:
+    """A funny meme from the bank: (joke, picture link, caption).
+
+    Seeded from the request, so a test can predict it and each new request
+    gets a fresh pick. An empty pool means the whole bank.
+    """
+    seed = f"{call.context.request_id}|{call.context.now.isoformat()}"
+    joke = random.Random(seed).choice(pool or JOKES)
+    caption = " / ".join(line for line in joke["lines"] if line)
+    return joke, joke_url(joke), caption
+
+
+#: Said after a meme from the bank that nobody asked for by name, so a first
+#: timer learns how to make their own.
+NEXT_STEP = (
+    "Want your own? Say \"make a drake meme saying doing my coursework / "
+    "building on pippa\"."
+)
+
+#: The meme used when somebody gives words but names no meme, or one this
+#: app does not know: two panels suit most captions.
+DEFAULT_MEME = next(meme for meme in MEMES if meme.get("memegen") == "drake")
+
+
 class App:
     def __init__(self) -> None:
         self._manifest = validate_manifest(load_manifest_file(MANIFEST_PATH))
@@ -230,12 +259,8 @@ class App:
         a meme, not a refusal.
         """
         topic = words(call.inputs.get("topic") or "")
-        pool = [joke for joke in JOKES if topic & set(joke["tags"])] or JOKES
-        seed = f"{call.context.request_id}|{call.context.now.isoformat()}"
-        joke = random.Random(seed).choice(pool)
-        path = "/".join(encode_line(line) for line in joke["lines"])
-        url = f"{MEMEGEN}{joke['template']}/{path}.png"
-        caption = " / ".join(line for line in joke["lines"] if line)
+        pool = [joke for joke in JOKES if topic & set(joke["tags"])]
+        joke, url, caption = pick_joke(call, pool)
         return Result(
             data={"name": joke["name"], "image_url": url, "caption": caption},
             narrative=f"Here's one: {url}",
@@ -285,22 +310,45 @@ class App:
         )
 
     def _make(self, call: Call) -> Result:
+        """Put the person's words on a meme, and never answer with a refusal.
+
+        Somebody trying the app for the first time types "make me a funny
+        meme", with no words and often no meme. A refusal there is the worst
+        first impression, so missing words get a funny meme from the bank
+        (on the meme they named, if the bank has one), and words with no meme,
+        or a meme this app does not know, go on a Drake meme.
+        """
         description = (call.inputs.get("meme") or "").strip()
         text = (call.inputs.get("text") or "").strip()
-        if not words(description):
-            error = NoDescription(f"no meme named: {description!r}")
-            error.user_message = (
-                "Say which meme to use, for example \"drake\" or "
-                "\"dog in a burning room\"."
-            )
-            raise error
-        if not text.replace("/", "").replace("|", "").strip():
-            raise NoCaption("no caption text")
 
-        meme = self._match(description)[0][1]
+        meme = None
+        if words(description):
+            ranked = rank(description)
+            if ranked and ranked[0][0] >= MIN_SCORE:
+                meme = ranked[0][1]
+
+        if not text.replace("/", "").replace("|", "").strip():
+            pool = [j for j in JOKES if meme and j["template"] == meme.get("memegen")]
+            joke, url, caption = pick_joke(call, pool)
+            return Result(
+                data={
+                    "name": joke["name"],
+                    "image_url": url,
+                    "panels": len(joke["lines"]),
+                    "panels_filled": sum(1 for line in joke["lines"] if line),
+                },
+                narrative=f"Here's a funny one: {url} {NEXT_STEP}",
+            )
+
+        unknown = meme is None and bool(words(description))
+        meme = meme or DEFAULT_MEME
         lines = split_lines(text, meme["lines"])
         url = caption_url(meme, lines)
         used = sum(1 for line in lines if line.strip())
+        note = (
+            f" I don't know a \"{description}\" meme, so I used Drake."
+            if unknown else ""
+        )
         return Result(
             data={
                 "name": meme["name"],
@@ -308,11 +356,24 @@ class App:
                 "panels": meme["lines"],
                 "panels_filled": used,
             },
-            narrative=f"Here is your \"{meme['name']}\" meme: {url}",
+            narrative=f"Here is your \"{meme['name']}\" meme: {url}{note}",
         )
 
     def _find(self, call: Call) -> Result:
         description = (call.inputs.get("description") or "").strip()
+        if not words(description):
+            # Nothing described ("@MemeMaker hi"): show a funny one instead.
+            joke, url, caption = pick_joke(call)
+            return Result(
+                data={
+                    "name": joke["name"],
+                    "image_url": url,
+                    "shows": caption,
+                    "used_for": "A funny one to start you off.",
+                    "other_matches": [],
+                },
+                narrative=f"Here's a funny one: {url} {NEXT_STEP}",
+            )
         ranked = self._match(description)
         best = ranked[0][1]
         others = [
