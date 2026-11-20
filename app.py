@@ -21,6 +21,7 @@ lightly stemmed, so "burning", "burns" and "burn" all meet.
 from __future__ import annotations
 
 import json
+import random
 import re
 from pathlib import Path
 from urllib.parse import quote, urlencode
@@ -37,6 +38,9 @@ from pippa_agentapp_sdk import (
 HERE = Path(__file__).parent
 MANIFEST_PATH = HERE / "manifest.yaml"
 MEMES = json.loads((HERE / "memes.json").read_text("utf-8"))
+#: Ready-made funny memes about Imperial student life and Pippa, for
+#: `meme.random`. Each has a memegen template, its text and topic tags.
+JOKES = json.loads((HERE / "jokes.json").read_text("utf-8"))
 
 CAPTION_URL = "https://imgflip.com/memegenerator/{id}"
 MEMEGEN = "https://api.memegen.link/images/"
@@ -181,6 +185,8 @@ class App:
             return self._make(call)
         if call.outcome_id == "meme.list":
             return self._list(call)
+        if call.outcome_id == "meme.random":
+            return self._random(call)
         raise AgentAppError(f"this app cannot do {call.outcome_id!r}")
 
     @staticmethod
@@ -197,6 +203,27 @@ class App:
             )
             raise error
         return ranked
+
+    @staticmethod
+    def _random(call: Call) -> Result:
+        """A ready-made funny meme from the bank, on a topic if one was named.
+
+        The choice is seeded from the request, so a test can predict it and
+        every new request gets a fresh pick. A topic with nothing in the bank
+        falls back to the whole bank: somebody asking for a random meme wants
+        a meme, not a refusal.
+        """
+        topic = words(call.inputs.get("topic") or "")
+        pool = [joke for joke in JOKES if topic & set(joke["tags"])] or JOKES
+        seed = f"{call.context.request_id}|{call.context.now.isoformat()}"
+        joke = random.Random(seed).choice(pool)
+        path = "/".join(encode_line(line) for line in joke["lines"])
+        url = f"{MEMEGEN}{joke['template']}/{path}.png"
+        caption = " / ".join(line for line in joke["lines"] if line)
+        return Result(
+            data={"name": joke["name"], "image_url": url, "caption": caption},
+            narrative=f"Here's one: {url}",
+        )
 
     @staticmethod
     def _list(call: Call) -> Result:

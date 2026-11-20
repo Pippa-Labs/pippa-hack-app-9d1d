@@ -69,14 +69,15 @@ app:
   # your "latest" version is simply the one you pushed most recently.
   # docs/REVIEW_AND_SHARING.md says which version you, your testers and
   # everybody else get.
-  version: 0.3.0
+  version: 0.4.0
   # One or two sentences, written for someone deciding whether to install it.
   # Say what it does and what it sends anywhere. Never use the word "by" — the
   # badge Pippa shows is parsed from "[via <name> <version> by <author name>]"
   # (the author name is `app_author_name` above) and splits on the first "by".
   summary: >-
     Sends the actual picture of a meme you describe, or makes a new meme
-    picture with your own words on it, and lists the memes it knows. Its catalogue of popular memes is
+    picture with your own words on it, or a random funny one about Imperial
+    student life and Pippa, and lists the memes it knows. Its catalogue of popular memes is
     built in; captioned pictures are drawn at memegen.link from the words
     you give.
 
@@ -150,7 +151,7 @@ outcomes:
       - create a meme with the text
       - caption a meme with
       - put my words on a meme
-      - generate a meme that says
+      - make a meme that says
       - turn this into a meme
       - make me a custom meme
       - write on the meme
@@ -212,6 +213,37 @@ outcomes:
       - name: count
         type: integer
         description: How many memes are listed.
+
+  - id: meme.random
+    summary: Send a random funny ready-made meme about Imperial student life or Pippa
+    example_phrases:
+      - generate funny imperial student meme
+      - send me a random funny meme
+      - surprise me with a meme
+      - random imperial student meme
+      - give me a funny uni meme
+      - funny meme about pippa
+      - make me laugh with a meme
+      - generate a random meme
+    inputs:
+      - name: topic
+        type: string
+        required: false
+        description: >-
+          A subject the person wants the joke to be about, if they named one:
+          for example "imperial", "pippa", "exams", "library" or "coursework".
+          If they just asked for a random or funny meme, return an empty
+          string.
+    output:
+      - name: name
+        type: string
+        description: The meme template the joke uses.
+      - name: image_url
+        type: string
+        description: A link to the finished meme picture.
+      - name: caption
+        type: string
+        description: The words on the meme, panels separated with " / ".
 
 # ── API keys your app needs (this example needs none) ────────────────────────
 #

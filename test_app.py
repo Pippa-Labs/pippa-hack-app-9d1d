@@ -11,14 +11,15 @@ from datetime import datetime, timezone
 import pytest
 from pippa_agentapp_sdk import LocalRunner, OutputShapeViolation
 
-from app import MEMES, App, NoCaption, NoDescription, NoMatchingMeme, encode_line
+from app import JOKES, MEMES, App, NoCaption, NoDescription, NoMatchingMeme, encode_line
 
 NOW = datetime(2026, 11, 20, 12, 0, tzinfo=timezone.utc)
 
 
-def call(inputs: dict, outcome: str = "meme.find", *, explicit: bool = False):
+def call(inputs: dict, outcome: str = "meme.find", *, explicit: bool = False,
+         request_id: str = "test-1"):
     return LocalRunner(App()).call(
-        outcome, inputs, granted_secrets={}, now=NOW, request_id="test-1",
+        outcome, inputs, granted_secrets={}, now=NOW, request_id=request_id,
         explicit=explicit,
     ).result
 
@@ -26,7 +27,7 @@ def call(inputs: dict, outcome: str = "meme.find", *, explicit: bool = False):
 def test_the_manifest_is_valid():
     app = App()
     assert app.manifest.app_id.startswith("hack.")
-    assert [o.id for o in app.manifest.outcomes] == ["meme.find", "meme.make", "meme.list"]
+    assert [o.id for o in app.manifest.outcomes] == ["meme.find", "meme.make", "meme.list", "meme.random"]
 
 
 def test_the_catalogue_is_well_formed():
@@ -196,3 +197,32 @@ def test_an_unknown_topic_says_so():
     with pytest.raises(NoMatchingMeme) as failure:
         call({"topic": "bananas in pyjamas"}, "meme.list")
     assert "bananas in pyjamas" in failure.value.user_message
+
+
+def test_the_joke_bank_is_well_formed():
+    assert len(JOKES) >= 30
+    for joke in JOKES:
+        assert joke["template"] and joke["name"] and joke["tags"]
+        assert any(line.strip() for line in joke["lines"])
+
+
+def test_it_sends_a_random_meme_from_the_bank():
+    data = call({}, "meme.random").data
+    assert data["image_url"].startswith("https://api.memegen.link/images/")
+    assert data["image_url"].endswith(".png")
+    assert data["caption"] in {" / ".join(l for l in j["lines"] if l) for j in JOKES}
+
+
+def test_different_requests_get_different_memes():
+    urls = {call({}, "meme.random", request_id=f"r{i}").data["image_url"] for i in range(20)}
+    assert len(urls) > 5
+
+
+def test_a_topic_picks_from_matching_jokes():
+    for i in range(10):
+        caption = call({"topic": "pippa"}, "meme.random", request_id=f"p{i}").data["caption"]
+        assert "pippa" in caption.lower() or "app" in caption.lower()
+
+
+def test_an_unknown_topic_still_gets_a_meme():
+    assert call({"topic": "bananas"}, "meme.random").data["image_url"]

@@ -1,0 +1,749 @@
+[
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "doing my coursework",
+   "building on pippa"
+  ],
+  "tags": [
+   "pippa",
+   "coursework"
+  ]
+ },
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "paying for the gym",
+   "walking from south ken to white city"
+  ],
+  "tags": [
+   "imperial",
+   "campus"
+  ]
+ },
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "starting the problem sheet early",
+   "starting it 40 minutes before the deadline"
+  ],
+  "tags": [
+   "imperial",
+   "deadline",
+   "coursework"
+  ]
+ },
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "asking my lab partner",
+   "asking pippa"
+  ],
+  "tags": [
+   "pippa",
+   "lab"
+  ]
+ },
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "the old imperial logo",
+   "arguing about the new imperial logo all term"
+  ],
+  "tags": [
+   "imperial",
+   "logo",
+   "rebrand"
+  ]
+ },
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "reading 400 pages of lecture notes",
+   "asking pippa for the one fact i need"
+  ],
+  "tags": [
+   "pippa",
+   "lecture",
+   "revision"
+  ]
+ },
+ {
+  "template": "fine",
+  "name": "This is Fine",
+  "lines": [
+   "exam in 9 hours and i haven't opened the notes",
+   "this is fine"
+  ],
+  "tags": [
+   "imperial",
+   "exam",
+   "revision"
+  ]
+ },
+ {
+  "template": "fine",
+  "name": "This is Fine",
+  "lines": [
+   "the central library at 11pm in exam season",
+   "this is fine"
+  ],
+  "tags": [
+   "imperial",
+   "library",
+   "exam"
+  ]
+ },
+ {
+  "template": "success",
+  "name": "Success Kid",
+  "lines": [
+   "got 54% on the test",
+   "my friend got 51%"
+  ],
+  "tags": [
+   "imperial",
+   "exam",
+   "grades"
+  ]
+ },
+ {
+  "template": "success",
+  "name": "Success Kid",
+  "lines": [
+   "the exam question",
+   "was on the past paper"
+  ],
+  "tags": [
+   "imperial",
+   "exam"
+  ]
+ },
+ {
+  "template": "rollsafe",
+  "name": "Roll Safe",
+  "lines": [
+   "can't miss the 9am lecture",
+   "if you watch the recording at 2x speed"
+  ],
+  "tags": [
+   "imperial",
+   "lecture"
+  ]
+ },
+ {
+  "template": "rollsafe",
+  "name": "Roll Safe",
+  "lines": [
+   "can't stress about coursework",
+   "if you're building a meme app instead"
+  ],
+  "tags": [
+   "pippa",
+   "coursework"
+  ]
+ },
+ {
+  "template": "mordor",
+  "name": "One Does Not Simply Walk into Mordor",
+  "lines": [
+   "one does not simply",
+   "find a free plug socket in the library in exam season"
+  ],
+  "tags": [
+   "imperial",
+   "library",
+   "exam"
+  ]
+ },
+ {
+  "template": "mordor",
+  "name": "One Does Not Simply Walk into Mordor",
+  "lines": [
+   "one does not simply",
+   "catch the white city shuttle bus on time"
+  ],
+  "tags": [
+   "imperial",
+   "shuttle",
+   "bus",
+   "campus"
+  ]
+ },
+ {
+  "template": "woman-cat",
+  "name": "Woman Yelling at a Cat",
+  "lines": [
+   "you said you'd revise all weekend",
+   "i was building pippa apps"
+  ],
+  "tags": [
+   "pippa",
+   "revision"
+  ]
+ },
+ {
+  "template": "spongebob",
+  "name": "Mocking Spongebob",
+  "lines": [
+   "just start your coursework early",
+   "jUsT sTaRt YoUr CoUrSeWoRk EaRlY"
+  ],
+  "tags": [
+   "imperial",
+   "coursework",
+   "procrastination"
+  ]
+ },
+ {
+  "template": "cmm",
+  "name": "Change My Mind",
+  "lines": [
+   "the sherfield building is a maze on purpose"
+  ],
+  "tags": [
+   "imperial",
+   "campus"
+  ]
+ },
+ {
+  "template": "cmm",
+  "name": "Change My Mind",
+  "lines": [
+   "pippa apps should count as coursework"
+  ],
+  "tags": [
+   "pippa",
+   "coursework"
+  ]
+ },
+ {
+  "template": "db",
+  "name": "Distracted Boyfriend",
+  "lines": [
+   "building on pippa",
+   "me",
+   "my dissertation"
+  ],
+  "tags": [
+   "pippa",
+   "dissertation"
+  ]
+ },
+ {
+  "template": "db",
+  "name": "Distracted Boyfriend",
+  "lines": [
+   "a nap",
+   "imperial students",
+   "the problem sheet due at 9am"
+  ],
+  "tags": [
+   "imperial",
+   "coursework",
+   "sleep"
+  ]
+ },
+ {
+  "template": "astronaut",
+  "name": "Always Has Been",
+  "lines": [
+   "wait, it's all just maths?",
+   "always has been",
+   "first year engineer",
+   "fourth year engineer"
+  ],
+  "tags": [
+   "imperial",
+   "engineering",
+   "maths"
+  ]
+ },
+ {
+  "template": "astronaut",
+  "name": "Always Has Been",
+  "lines": [
+   "wait, an app made this meme?",
+   "always has been",
+   "me",
+   "pippa"
+  ],
+  "tags": [
+   "pippa"
+  ]
+ },
+ {
+  "template": "gb",
+  "name": "Galaxy Brain",
+  "lines": [
+   "revising",
+   "revising in the library",
+   "revising in the library at 3am",
+   "asking pippa to make memes about revising"
+  ],
+  "tags": [
+   "pippa",
+   "imperial",
+   "library",
+   "revision"
+  ]
+ },
+ {
+  "template": "panik-kalm-panik",
+  "name": "Panik Kalm Panik",
+  "lines": [
+   "coursework deadline at midnight",
+   "the deadline got extended",
+   "so did the other three, to the same day"
+  ],
+  "tags": [
+   "imperial",
+   "deadline",
+   "coursework"
+  ]
+ },
+ {
+  "template": "panik-kalm-panik",
+  "name": "Panik Kalm Panik",
+  "lines": [
+   "exam results are out",
+   "the grade boundaries are low",
+   "they're low because everyone failed"
+  ],
+  "tags": [
+   "imperial",
+   "exam",
+   "grades"
+  ]
+ },
+ {
+  "template": "ds",
+  "name": "Daily Struggle",
+  "lines": [
+   "sleep",
+   "finish the coursework",
+   "imperial student"
+  ],
+  "tags": [
+   "imperial",
+   "coursework",
+   "sleep"
+  ]
+ },
+ {
+  "template": "ds",
+  "name": "Daily Struggle",
+  "lines": [
+   "the union",
+   "the library",
+   "imperial student on a friday night"
+  ],
+  "tags": [
+   "imperial",
+   "library",
+   "union"
+  ]
+ },
+ {
+  "template": "exit",
+  "name": "Left Exit 12 Off Ramp",
+  "lines": [
+   "building a pippa app",
+   "finishing my coursework",
+   "me at the hackathon"
+  ],
+  "tags": [
+   "pippa",
+   "hackathon",
+   "coursework"
+  ]
+ },
+ {
+  "template": "exit",
+  "name": "Left Exit 12 Off Ramp",
+  "lines": [
+   "making memes on pippa",
+   "internship applications",
+   "me in week 7"
+  ],
+  "tags": [
+   "pippa",
+   "internship"
+  ]
+ },
+ {
+  "template": "pigeon",
+  "name": "Is This a Pigeon?",
+  "lines": [
+   "first year",
+   "the sherfield building",
+   "is this the way out?"
+  ],
+  "tags": [
+   "imperial",
+   "campus",
+   "fresher"
+  ]
+ },
+ {
+  "template": "home",
+  "name": "We Have Food at Home",
+  "lines": [
+   "me: can we get a pret?",
+   "mum: we have food at home",
+   "food at home: a meal deal from last week"
+  ],
+  "tags": [
+   "imperial",
+   "food"
+  ]
+ },
+ {
+  "template": "noidea",
+  "name": "I Have No Idea What I'm Doing",
+  "lines": [
+   "i have no idea",
+   "what i'm doing in this lab"
+  ],
+  "tags": [
+   "imperial",
+   "lab"
+  ]
+ },
+ {
+  "template": "fry",
+  "name": "Futurama Fry",
+  "lines": [
+   "not sure if i understood the lecture",
+   "or the lecturer just stopped talking"
+  ],
+  "tags": [
+   "imperial",
+   "lecture"
+  ]
+ },
+ {
+  "template": "pooh",
+  "name": "Tuxedo Winnie the Pooh",
+  "lines": [
+   "making memes",
+   "building a pippa agent app at a hackathon"
+  ],
+  "tags": [
+   "pippa",
+   "hackathon"
+  ]
+ },
+ {
+  "template": "pooh",
+  "name": "Tuxedo Winnie the Pooh",
+  "lines": [
+   "the library",
+   "the abdus salam library"
+  ],
+  "tags": [
+   "imperial",
+   "library"
+  ]
+ },
+ {
+  "template": "buzz",
+  "name": "X, X Everywhere",
+  "lines": [
+   "deadlines",
+   "deadlines everywhere"
+  ],
+  "tags": [
+   "imperial",
+   "deadline"
+  ]
+ },
+ {
+  "template": "buzz",
+  "name": "X, X Everywhere",
+  "lines": [
+   "pippa apps",
+   "pippa apps everywhere"
+  ],
+  "tags": [
+   "pippa",
+   "hackathon"
+  ]
+ },
+ {
+  "template": "stonks",
+  "name": "Stonks",
+  "lines": [
+   "built a pippa app",
+   "stonks"
+  ],
+  "tags": [
+   "pippa"
+  ]
+ },
+ {
+  "template": "both",
+  "name": "Why Not Both?",
+  "lines": [
+   "coursework or pippa apps?",
+   "why not both?"
+  ],
+  "tags": [
+   "pippa",
+   "coursework"
+  ]
+ },
+ {
+  "template": "handshake",
+  "name": "Epic Handshake",
+  "lines": [
+   "engineers",
+   "medics",
+   "complaining about the shuttle bus"
+  ],
+  "tags": [
+   "imperial",
+   "shuttle",
+   "bus",
+   "engineering",
+   "medics"
+  ]
+ },
+ {
+  "template": "handshake",
+  "name": "Epic Handshake",
+  "lines": [
+   "imperial students",
+   "pippa",
+   "being awake at 3am"
+  ],
+  "tags": [
+   "pippa",
+   "imperial",
+   "sleep"
+  ]
+ },
+ {
+  "template": "gru",
+  "name": "Gru's Plan",
+  "lines": [
+   "sign up for the hackathon",
+   "build a pippa app",
+   "win a prize",
+   "win a prize"
+  ],
+  "tags": [
+   "pippa",
+   "hackathon"
+  ]
+ },
+ {
+  "template": "harold",
+  "name": "Hide the Pain Harold",
+  "lines": [
+   "telling my parents uni is going great",
+   "it's week 9 and i'm on problem sheet 2"
+  ],
+  "tags": [
+   "imperial",
+   "coursework"
+  ]
+ },
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "getting a 97% in school",
+   "getting a 51% at imperial and celebrating like i won the world cup"
+  ],
+  "tags": [
+   "imperial",
+   "exam",
+   "grades"
+  ]
+ },
+ {
+  "template": "fine",
+  "name": "This is Fine",
+  "lines": [
+   "waking up for a 9am lecture in the dark",
+   "this is fine"
+  ],
+  "tags": [
+   "imperial",
+   "lecture",
+   "morning"
+  ]
+ },
+ {
+  "template": "harold",
+  "name": "Hide the Pain Harold",
+  "lines": [
+   "opening my exam results",
+   "and smiling for my parents"
+  ],
+  "tags": [
+   "imperial",
+   "exam",
+   "grades",
+   "results"
+  ]
+ },
+ {
+  "template": "success",
+  "name": "Success Kid",
+  "lines": [
+   "got a katsu after the last lecture",
+   "best part of the whole day"
+  ],
+  "tags": [
+   "imperial",
+   "food",
+   "lecture"
+  ]
+ },
+ {
+  "template": "rollsafe",
+  "name": "Roll Safe",
+  "lines": [
+   "can't fall behind on lectures",
+   "if you were never ahead"
+  ],
+  "tags": [
+   "imperial",
+   "lecture",
+   "procrastination"
+  ]
+ },
+ {
+  "template": "spongebob",
+  "name": "Mocking Spongebob",
+  "lines": [
+   "this term i'm going to get ahead of my deadlines",
+   "tHiS tErM i'M gOiNg To GeT aHeAd Of My DeAdLiNeS"
+  ],
+  "tags": [
+   "imperial",
+   "deadline",
+   "procrastination"
+  ]
+ },
+ {
+  "template": "panik-kalm-panik",
+  "name": "Panik Kalm Panik",
+  "lines": [
+   "my essay starts with 'as an ai language model'",
+   "i deleted it before handing in",
+   "it was in the second paragraph too"
+  ],
+  "tags": [
+   "imperial",
+   "coursework",
+   "essay",
+   "ai"
+  ]
+ },
+ {
+  "template": "ds",
+  "name": "Daily Struggle",
+  "lines": [
+   "a personal life",
+   "good grades",
+   "imperial student"
+  ],
+  "tags": [
+   "imperial",
+   "grades",
+   "sleep"
+  ]
+ },
+ {
+  "template": "db",
+  "name": "Distracted Boyfriend",
+  "lines": [
+   "a 9am lecture",
+   "me",
+   "my warm bed"
+  ],
+  "tags": [
+   "imperial",
+   "lecture",
+   "morning",
+   "sleep"
+  ]
+ },
+ {
+  "template": "woman-cat",
+  "name": "Woman Yelling at a Cat",
+  "lines": [
+   "the lecture recording is 2 hours long",
+   "me watching it at 3x speed the night before the exam"
+  ],
+  "tags": [
+   "imperial",
+   "lecture",
+   "exam"
+  ]
+ },
+ {
+  "template": "gb",
+  "name": "Galaxy Brain",
+  "lines": [
+   "applying for one internship",
+   "applying for ten internships",
+   "applying for a hundred internships",
+   "building a pippa app so they come to me"
+  ],
+  "tags": [
+   "pippa",
+   "internship"
+  ]
+ },
+ {
+  "template": "handshake",
+  "name": "Epic Handshake",
+  "lines": [
+   "first years",
+   "final years",
+   "not knowing where the lecture theatre is"
+  ],
+  "tags": [
+   "imperial",
+   "campus",
+   "lecture",
+   "fresher"
+  ]
+ },
+ {
+  "template": "success",
+  "name": "Success Kid",
+  "lines": [
+   "asked pippa for a meme",
+   "it was actually funny"
+  ],
+  "tags": [
+   "pippa"
+  ]
+ },
+ {
+  "template": "astronaut",
+  "name": "Always Has Been",
+  "lines": [
+   "wait, a 40% is a pass?",
+   "always has been",
+   "me in week 1",
+   "me after exams"
+  ],
+  "tags": [
+   "imperial",
+   "exam",
+   "grades"
+  ]
+ }
+]
