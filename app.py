@@ -179,6 +179,8 @@ class App:
             return self._find(call)
         if call.outcome_id == "meme.make":
             return self._make(call)
+        if call.outcome_id == "meme.list":
+            return self._list(call)
         raise AgentAppError(f"this app cannot do {call.outcome_id!r}")
 
     @staticmethod
@@ -195,6 +197,36 @@ class App:
             )
             raise error
         return ranked
+
+    @staticmethod
+    def _list(call: Call) -> Result:
+        """Every meme in the catalogue, or those matching a topic."""
+        topic = (call.inputs.get("topic") or "").strip()
+        if words(topic):
+            chosen = [meme for points, meme in rank(topic) if points >= MIN_SCORE]
+            if not chosen:
+                error = NoMatchingMeme(f"nothing in the catalogue for {topic!r}")
+                error.user_message = (
+                    f"I do not have any memes about \"{topic}\". "
+                    "Ask what memes I know to see them all."
+                )
+                raise error
+        else:
+            topic = ""
+            chosen = MEMES
+
+        listed = [
+            f"{meme['name']} ({meme['lines']} panel{'s' if meme['lines'] > 1 else ''})"
+            for meme in chosen
+        ]
+        about = f" about {topic}" if topic else ""
+        return Result(
+            data={"memes": listed, "count": len(listed)},
+            narrative=(
+                f"I know {len(listed)} memes{about}, and can put your words on "
+                "any of them: say \"make a <meme> meme saying top / bottom\"."
+            ),
+        )
 
     def _make(self, call: Call) -> Result:
         description = (call.inputs.get("meme") or "").strip()

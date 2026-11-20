@@ -26,7 +26,7 @@ def call(inputs: dict, outcome: str = "meme.find", *, explicit: bool = False):
 def test_the_manifest_is_valid():
     app = App()
     assert app.manifest.app_id.startswith("hack.")
-    assert [o.id for o in app.manifest.outcomes] == ["meme.find", "meme.make"]
+    assert [o.id for o in app.manifest.outcomes] == ["meme.find", "meme.make", "meme.list"]
 
 
 def test_the_catalogue_is_well_formed():
@@ -173,3 +173,26 @@ def test_making_an_unknown_meme_says_so():
 
 def test_making_picked_by_name_works_the_same():
     assert make("drake", "a / b", explicit=True).data == make("drake", "a / b").data
+
+
+def test_it_lists_every_meme():
+    data = call({}, "meme.list").data
+    assert data["count"] == len(MEMES) == len(data["memes"])
+    assert "Drake Hotline Bling (2 panels)" in data["memes"]
+    assert "Change My Mind (1 panel)" in data["memes"]
+
+
+def test_a_blank_topic_lists_everything():
+    assert call({"topic": ""}, "meme.list").data["count"] == len(MEMES)
+
+
+def test_it_lists_memes_about_a_topic():
+    data = call({"topic": "spongebob"}, "meme.list").data
+    assert "Mocking Spongebob (2 panels)" in data["memes"]
+    assert data["count"] < len(MEMES)
+
+
+def test_an_unknown_topic_says_so():
+    with pytest.raises(NoMatchingMeme) as failure:
+        call({"topic": "bananas in pyjamas"}, "meme.list")
+    assert "bananas in pyjamas" in failure.value.user_message

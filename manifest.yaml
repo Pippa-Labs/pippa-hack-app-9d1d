@@ -69,14 +69,14 @@ app:
   # your "latest" version is simply the one you pushed most recently.
   # docs/REVIEW_AND_SHARING.md says which version you, your testers and
   # everybody else get.
-  version: 0.2.0
+  version: 0.3.0
   # One or two sentences, written for someone deciding whether to install it.
   # Say what it does and what it sends anywhere. Never use the word "by" — the
   # badge Pippa shows is parsed from "[via <name> <version> by <author name>]"
   # (the author name is `app_author_name` above) and splits on the first "by".
   summary: >-
     Sends the actual picture of a meme you describe, or makes a new meme
-    picture with your own words on it. Its catalogue of popular memes is
+    picture with your own words on it, and lists the memes it knows. Its catalogue of popular memes is
     built in; captioned pictures are drawn at memegen.link from the words
     you give.
 
@@ -185,6 +185,33 @@ outcomes:
       - name: panels_filled
         type: integer
         description: How many of them got words.
+
+  - id: meme.list
+    summary: List the memes this app knows and can make
+    example_phrases:
+      - what memes do you have
+      - which memes do you know
+      - list all your memes
+      - what meme options are there
+      - which memes are available
+      - give me a list of memes
+      - what spongebob memes do you have
+    inputs:
+      - name: topic
+        type: string
+        required: false
+        description: >-
+          A subject the person wants memes about, if they named one: for
+          example "spongebob", "cats" or "star wars". If they asked for all
+          the memes, or named no subject, return an empty string.
+    output:
+      - name: memes
+        type: array
+        item_type: string
+        description: The meme names, each with how many places for text it has.
+      - name: count
+        type: integer
+        description: How many memes are listed.
 
 # ── API keys your app needs (this example needs none) ────────────────────────
 #
