@@ -350,5 +350,124 @@
    "london",
    "tube"
   ]
+ },
+ {
+  "template": "fine",
+  "name": "This is Fine",
+  "lines": [
+   "tube strike, bus diversion and it's raining",
+   "this is fine"
+  ],
+  "tags": [
+   "london",
+   "tube",
+   "strike"
+  ]
+ },
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "checking if the tube is running",
+   "just assuming it's on strike"
+  ],
+  "tags": [
+   "london",
+   "tube",
+   "strike"
+  ]
+ },
+ {
+  "template": "buzz",
+  "name": "X, X Everywhere",
+  "lines": [
+   "tube strikes",
+   "tube strikes everywhere"
+  ],
+  "tags": [
+   "london",
+   "tube",
+   "strike"
+  ]
+ },
+ {
+  "template": "mordor",
+  "name": "One Does Not Simply Walk into Mordor",
+  "lines": [
+   "one does not simply",
+   "get through a month without a tube strike"
+  ],
+  "tags": [
+   "london",
+   "tube",
+   "strike"
+  ]
+ },
+ {
+  "template": "success",
+  "name": "Success Kid",
+  "lines": [
+   "the tube actually ran",
+   "the whole way home"
+  ],
+  "tags": [
+   "london",
+   "tube"
+  ]
+ },
+ {
+  "template": "spongebob",
+  "name": "Mocking Spongebob",
+  "lines": [
+   "there's definitely no tube strike this week",
+   "ThErE's DeFiNiTeLy No TuBe StRiKe ThIs WeEk"
+  ],
+  "tags": [
+   "london",
+   "tube",
+   "strike"
+  ]
+ },
+ {
+  "template": "ds",
+  "name": "Daily Struggle",
+  "lines": [
+   "walk 45 minutes",
+   "wait for the rail replacement bus",
+   "londoner during a tube strike"
+  ],
+  "tags": [
+   "london",
+   "tube",
+   "strike"
+  ]
+ },
+ {
+  "template": "harold",
+  "name": "Hide the Pain Harold",
+  "lines": [
+   "walked an hour because of the tube strike",
+   "they called it off while i was walking"
+  ],
+  "tags": [
+   "london",
+   "tube",
+   "strike"
+  ]
+ },
+ {
+  "template": "rollsafe",
+  "name": "Roll Safe",
+  "lines": [
+   "can't be stuck in a tube strike",
+   "if you never leave the library"
+  ],
+  "tags": [
+   "london",
+   "tube",
+   "strike",
+   "imperial",
+   "library"
+  ]
  }
 ]
