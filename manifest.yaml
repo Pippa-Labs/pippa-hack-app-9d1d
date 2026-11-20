@@ -39,7 +39,7 @@ persistence: none
 # It does not decide who owns the app, and nothing in this file does. Pippa
 # Labs created this repository for your Pippa account, so every app published
 # from it is yours. docs/REVIEW_AND_SHARING.md is the whole story.
-app_author_name: "Bob"
+app_author_name: "Meme Scientist"
 
 app:
   # Filled in for you. A new repository replaces this placeholder within a
@@ -69,7 +69,7 @@ app:
   # your "latest" version is simply the one you pushed most recently.
   # docs/REVIEW_AND_SHARING.md says which version you, your testers and
   # everybody else get.
-  version: 0.4.5
+  version: 0.4.6
   # One or two sentences, written for someone deciding whether to install it.
   # Say what it does and what it sends anywhere. Never use the word "by" — the
   # badge Pippa shows is parsed from "[via <name> <version> by <author name>]"
