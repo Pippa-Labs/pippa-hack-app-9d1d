@@ -1,4 +1,4 @@
-"""Tests for Rilla. The build runs these and will not publish if they fail.
+"""Tests for MemeMaker. The build runs these and will not publish if they fail.
 
 Every call goes through `LocalRunner`, the same code the production runtime
 uses, so a result that does not match manifest.yaml fails here first.

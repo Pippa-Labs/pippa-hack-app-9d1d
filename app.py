@@ -1,4 +1,4 @@
-"""Rilla: find the meme somebody describes, or make one with their words.
+"""MemeMaker: find the meme somebody describes, or make one with their words.
 
 Two outcomes:
 
