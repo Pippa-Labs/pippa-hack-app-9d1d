@@ -239,5 +239,116 @@
    "pippa",
    "coursework"
   ]
+ },
+ {
+  "template": "drake",
+  "name": "Drakeposting",
+  "lines": [
+   "paying £6 for a coffee in south ken",
+   "instant coffee in halls"
+  ],
+  "tags": [
+   "london",
+   "food"
+  ]
+ },
+ {
+  "template": "fine",
+  "name": "This is Fine",
+  "lines": [
+   "the central line in july",
+   "this is fine"
+  ],
+  "tags": [
+   "london",
+   "tube"
+  ]
+ },
+ {
+  "template": "mordor",
+  "name": "One Does Not Simply Walk into Mordor",
+  "lines": [
+   "one does not simply",
+   "stand on the left on a tube escalator"
+  ],
+  "tags": [
+   "london",
+   "tube"
+  ]
+ },
+ {
+  "template": "rollsafe",
+  "name": "Roll Safe",
+  "lines": [
+   "can't pay london rent",
+   "if you live in the library"
+  ],
+  "tags": [
+   "london",
+   "imperial",
+   "library",
+   "rent"
+  ]
+ },
+ {
+  "template": "buzz",
+  "name": "X, X Everywhere",
+  "lines": [
+   "tourists",
+   "tourists everywhere"
+  ],
+  "tags": [
+   "london",
+   "tourists"
+  ]
+ },
+ {
+  "template": "success",
+  "name": "Success Kid",
+  "lines": [
+   "got a seat on the tube",
+   "at rush hour"
+  ],
+  "tags": [
+   "london",
+   "tube"
+  ]
+ },
+ {
+  "template": "harold",
+  "name": "Hide the Pain Harold",
+  "lines": [
+   "paying london rent",
+   "for a room the size of a wardrobe"
+  ],
+  "tags": [
+   "london",
+   "rent"
+  ]
+ },
+ {
+  "template": "spongebob",
+  "name": "Mocking Spongebob",
+  "lines": [
+   "the tube's only a few minutes late",
+   "ThE tUbE's OnLy A fEw MiNuTeS lAtE"
+  ],
+  "tags": [
+   "london",
+   "tube"
+  ]
+ },
+ {
+  "template": "ds",
+  "name": "Daily Struggle",
+  "lines": [
+   "squeeze onto the tube",
+   "walk in the rain",
+   "london student"
+  ],
+  "tags": [
+   "london",
+   "tube"
+  ]
  }
 ]
