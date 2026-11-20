@@ -1,40 +1,19 @@
-"""Your app. Replace this with whatever you are building.
+"""Rilla: name the meme somebody describes, and link to its picture.
 
-The shape never changes, whatever your app does:
+The catalogue is `memes.json`, beside this file, so a call never touches the
+network: each entry has the meme's name, its Imgflip template id and picture,
+what it shows, what it is used for, and extra words people use for it.
 
-    class App:
-        manifest  -> the parsed manifest.yaml sitting next to this file
-        handle(call) -> Result
-
-`handle` is called once per request and must return a `Result` whose `data`
-matches the `output` your manifest declares for that outcome — exactly: every
-declared field present, nothing extra, right types. The runtime checks it and
-refuses anything that does not match, which is deliberate. An app that can
-return surprise fields is an app Pippa cannot describe to a user before they
-install it.
-
-Three things worth knowing before you start:
-
-**You get the inputs, and nothing about who asked.** No user id, no account,
-no conversation. `call.inputs` is what Pippa extracted from the message;
-besides it, `call.context` carries only the time, an id for your logs, and
-whether the person picked your app by name. This is on purpose: your app
-cannot leak what it was never given.
-
-**You keep nothing.** A fresh copy of this class is built for every call and
-thrown away afterwards. Writing to a file or a global will appear to work and
-then silently stop, because the next call may be on a different machine.
-
-**Errors are part of the design.** Raise `AgentAppError` with a `user_message`
-when you cannot answer. That message is the one a user may see; everything
-else — the exception type, the traceback — stays in the logs.
+Matching is deliberately simple word overlap, weighted towards the meme's own
+name, then its keywords, then its description. Words are lower-cased and
+lightly stemmed, so "burning", "burns" and "burn" all meet.
 """
 
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+import json
+import re
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 from pippa_agentapp_sdk import (
     AgentAppError,
@@ -45,23 +24,89 @@ from pippa_agentapp_sdk import (
     validate_manifest,
 )
 
-MANIFEST_PATH = Path(__file__).with_name("manifest.yaml")
+HERE = Path(__file__).parent
+MANIFEST_PATH = HERE / "manifest.yaml"
+MEMES = json.loads((HERE / "memes.json").read_text("utf-8"))
+
+CAPTION_URL = "https://imgflip.com/memegenerator/{id}"
+
+#: Words that say nothing about which meme is meant.
+STOPWORDS = frozenset("""
+a an the my me i im is are was were be been do does did have has had of on in
+at to for with and or but if this that these those it its so just please can
+could would what whats which where who one there their they them he she his
+her him you your meme memes called name named link send show find picture pic
+image template gif about like looks looking from into out up some any thing
+""".split())
+
+#: Below this score a match is a guess, and the app says so instead.
+MIN_SCORE = 2
+
+#: How many runners-up to name.
+OTHERS = 3
+
+_WORD = re.compile(r"[a-z0-9]+")
 
 
-class CannotReadDate(AgentAppError):
-    """Raised when the message did not contain a date we can work with."""
-
-    # What a user may be shown. Write it as a sentence, not an error code.
-    user_message = "I could not work out which date you meant."
+class NoDescription(AgentAppError):
+    user_message = "Describe the meme you mean, for example \"dog in a burning room\"."
     retryable = False
 
 
-class App:
-    """A small, complete example: count the days until a date."""
+class NoMatchingMeme(AgentAppError):
+    user_message = "I do not know a meme that matches that description."
+    retryable = False
 
+
+def _stem(word: str) -> str:
+    for suffix in ("ing", "ed", "es", "s"):
+        if len(word) > len(suffix) + 2 and word.endswith(suffix):
+            return word[: -len(suffix)]
+    return word
+
+
+def words(text: str) -> set[str]:
+    """The meaningful, stemmed words in `text`."""
+    text = text.lower().replace("'", "")
+    return {_stem(w) for w in _WORD.findall(text) if w not in STOPWORDS}
+
+
+def _index(meme: dict) -> tuple[set[str], set[str], set[str]]:
+    return (
+        words(meme["name"]),
+        words(" ".join(meme["keywords"])),
+        words(meme["shows"] + " " + meme["use"]),
+    )
+
+
+INDEX = [(meme, _index(meme)) for meme in MEMES]
+
+
+def score(query: set[str], index: tuple[set[str], set[str], set[str]]) -> int:
+    name, keywords, description = index
+    total = 0
+    for word in query:
+        if word in name:
+            total += 3
+        elif word in keywords:
+            total += 2
+        elif word in description:
+            total += 1
+    return total
+
+
+def rank(description: str) -> list[tuple[int, dict]]:
+    """Every meme that matches at all, best first."""
+    query = words(description)
+    scored = [(score(query, index), meme) for meme, index in INDEX]
+    scored = [pair for pair in scored if pair[0] > 0]
+    # Stable sort, so equal scores keep catalogue order (most popular first).
+    scored.sort(key=lambda pair: pair[0], reverse=True)
+    return scored
+
+
+class App:
     def __init__(self) -> None:
-        # Validated at construction, so an app whose manifest is wrong fails
-        # immediately and loudly rather than on some later call.
         self._manifest = validate_manifest(load_manifest_file(MANIFEST_PATH))
 
     @property
@@ -69,110 +114,35 @@ class App:
         return self._manifest
 
     def handle(self, call: Call) -> Result:
-        """One request in, one Result out.
-
-        `call.outcome_id` says which of your manifest's outcomes was asked
-        for. With one outcome you can ignore it; with several, branch on it.
-        """
-        if call.outcome_id != "days.until":
+        if call.outcome_id != "meme.find":
             raise AgentAppError(f"this app cannot do {call.outcome_id!r}")
 
-        text = (call.inputs.get("date") or "").strip()
-        if not text:
-            # The manifest tells the extractor to send an empty string rather
-            # than guess, so this is the ordinary "they did not say" path.
-            #
-            # A missing or unreadable date (here, and in `_parse` below) is
-            # the only thing this app refuses for, which is why it never reads
-            # `call.context.explicit`, True when the person picked the app
-            # with @. That refusal is right whoever chose the app; the test
-            # that says so is in test_app.py.
-            raise CannotReadDate("no date in the message")
+        description = (call.inputs.get("description") or "").strip()
+        if not words(description):
+            raise NoDescription(f"no usable description: {description!r}")
 
-        # `call.context.now` is the current time, supplied by the runtime
-        # rather than read from the clock. That is what makes an app testable:
-        # a test can say what "now" is.
-        today = self._today(call)
-        target = self._parse(text, today)
-        difference = (target - today).days
+        ranked = rank(description)
+        if not ranked or ranked[0][0] < MIN_SCORE:
+            error = NoMatchingMeme(f"no meme scored {MIN_SCORE}+ for {description!r}")
+            error.user_message = (
+                f"I do not know a meme that matches \"{description}\". "
+                "Try describing what is in the picture."
+            )
+            raise error
 
+        best = ranked[0][1]
+        others = [
+            meme["name"] for points, meme in ranked[1 : OTHERS + 1]
+            if points >= MIN_SCORE
+        ]
         return Result(
             data={
-                "days": abs(difference),
-                "target_date": target.isoformat(),
-                "weekday": target.strftime("%A"),
-                "already_passed": difference < 0,
+                "name": best["name"],
+                "image_url": best["image_url"],
+                "caption_url": CAPTION_URL.format(id=best["id"]),
+                "shows": best["shows"],
+                "used_for": best["use"],
+                "other_matches": others,
             },
-            # Optional. One plain sentence Pippa may use when it writes its
-            # reply. Say what you found, not what you did.
-            narrative=self._sentence(target, difference),
+            narrative=f"That is the \"{best['name']}\" meme: {best['image_url']}",
         )
-
-    @staticmethod
-    def _today(call: Call) -> date:
-        """The user's today, not the server's.
-
-        A server in UTC and a user in Auckland disagree about what day it is
-        for twelve hours out of every twenty-four, and "how many days until"
-        is exactly the question that notices.
-        """
-        # No try/except around ZoneInfo, and that is the point: the manifest
-        # declares this input as `type: timezone`, so the runtime has already
-        # rejected anything that is not a real IANA zone before your code
-        # runs. Declaring the right type is cheaper than validating by hand,
-        # and the user gets a better error.
-        zone = call.inputs.get("timezone")
-        moment: datetime = call.context.now
-        if zone:
-            moment = moment.astimezone(ZoneInfo(zone))
-        return moment.date()
-
-    @staticmethod
-    def _parse(text: str, today: date) -> date:
-        """Turn what the user wrote into a date.
-
-        Deliberately small — real date parsing is its own project. Handles
-        `YYYY-MM-DD`, `25 December`, `December 25` and a bare day number.
-        """
-        cleaned = text.replace(",", " ").strip()
-
-        for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y"):
-            try:
-                return datetime.strptime(cleaned, fmt).date()
-            except ValueError:
-                continue
-
-        for fmt in ("%d %B", "%B %d", "%d %b", "%b %d"):
-            try:
-                parsed = datetime.strptime(cleaned, fmt).date()
-            except ValueError:
-                continue
-            # A bare day and month has no year. "25 December" asked in
-            # February means this year; asked in December means this year too,
-            # until it has passed, and then it means next year.
-            candidate = parsed.replace(year=today.year)
-            if candidate < today:
-                candidate = candidate.replace(year=today.year + 1)
-            return candidate
-
-        if cleaned.lower() == "tomorrow":
-            return today + timedelta(days=1)
-
-        raise CannotReadDate(f"could not parse {text!r} as a date")
-
-    @staticmethod
-    def _sentence(target: date, difference: int) -> str:
-        # Built by hand rather than with `%-d`, which is a GNU extension: it
-        # raises ValueError on Windows, where half of you are developing, and
-        # the failure would only show up at the last line of a working app.
-        pretty = (
-            f"{target.strftime('%A')} {target.day} "
-            f"{target.strftime('%B')} {target.year}"
-        )
-        if difference == 0:
-            return f"That is today, {pretty}."
-        if difference < 0:
-            return f"{pretty} was {abs(difference)} days ago."
-        if difference == 1:
-            return f"{pretty} is tomorrow."
-        return f"There are {difference} days until {pretty}."
