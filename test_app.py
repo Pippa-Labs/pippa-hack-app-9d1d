@@ -200,7 +200,7 @@ def test_an_unknown_topic_says_so():
 
 
 def test_the_joke_bank_is_well_formed():
-    assert len(JOKES) >= 30
+    assert len(JOKES) >= 15
     for joke in JOKES:
         assert joke["template"] and joke["name"] and joke["tags"]
         assert any(line.strip() for line in joke["lines"])

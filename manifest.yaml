@@ -69,17 +69,17 @@ app:
   # your "latest" version is simply the one you pushed most recently.
   # docs/REVIEW_AND_SHARING.md says which version you, your testers and
   # everybody else get.
-  version: 0.4.1
+  version: 0.4.2
   # One or two sentences, written for someone deciding whether to install it.
   # Say what it does and what it sends anywhere. Never use the word "by" — the
   # badge Pippa shows is parsed from "[via <name> <version> by <author name>]"
   # (the author name is `app_author_name` above) and splits on the first "by".
   summary: >-
-    Sends the actual picture of a meme you describe, or makes a new meme
-    picture with your own words on it, or a random funny one about Imperial
-    student life and Pippa, and lists the memes it knows. Its catalogue of popular memes is
-    built in; captioned pictures are drawn at memegen.link from the words
-    you give.
+    Makes meme pictures with your own words on them, sends the picture of a
+    meme you describe, or a random funny one about Imperial student life and
+    Pippa, each as a link you can share with your friends. It also lists the
+    memes it knows. Its catalogue is built in; captioned pictures are drawn at
+    memegen.link from the words you give.
 
 # Who can install it. `personal` means a person's own Pippa.
 agent_types:
