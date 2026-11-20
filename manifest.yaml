@@ -69,15 +69,16 @@ app:
   # your "latest" version is simply the one you pushed most recently.
   # docs/REVIEW_AND_SHARING.md says which version you, your testers and
   # everybody else get.
-  version: 0.1.0
+  version: 0.2.0
   # One or two sentences, written for someone deciding whether to install it.
   # Say what it does and what it sends anywhere. Never use the word "by" — the
   # badge Pippa shows is parsed from "[via <name> <version> by <author name>]"
   # (the author name is `app_author_name` above) and splits on the first "by".
   summary: >-
-    Finds the meme you are describing in your own words and gives its name,
-    a link to the picture and a link to caption it yourself. Sends nothing
-    anywhere: its catalogue of popular memes is built in.
+    Sends the actual picture of a meme you describe, or makes a new meme
+    picture with your own words on it. Its catalogue of popular memes is
+    built in; captioned pictures are drawn at memegen.link from the words
+    you give.
 
 # Who can install it. `personal` means a person's own Pippa.
 agent_types:
@@ -101,16 +102,16 @@ agent_types:
 
 outcomes:
   - id: meme.find
-    summary: Name the meme someone describes and link to its picture
+    summary: Send the picture of a meme someone describes, with its name
     example_phrases:
+      - send me the meme picture of
       - what's the meme where
+      - show me the meme image with
       - which meme has the
-      - find me the meme with
-      - what is that meme called
-      - send me the meme where
-      - link to the meme with
-      - show me the meme of
+      - get me the meme template of
+      - link to the meme picture where
       - name of the meme where
+      - blank meme template for
     inputs:
       - name: description
         type: string
@@ -141,6 +142,49 @@ outcomes:
         type: array
         item_type: string
         description: Names of other memes that also fit the description, best first.
+
+  - id: meme.make
+    summary: Make a meme picture with words the person chooses on it
+    example_phrases:
+      - make a meme saying
+      - create a meme with the text
+      - caption a meme with
+      - put my words on a meme
+      - generate a meme that says
+      - turn this into a meme
+      - make me a custom meme
+      - write on the meme
+    inputs:
+      - name: meme
+        type: string
+        required: false
+        description: >-
+          Which meme to use, as the person named or described it: for example
+          "drake", "distracted boyfriend" or "dog in a burning room". Copy
+          their words. If they did not say which meme, return an empty string
+          rather than choosing one for them.
+      - name: text
+        type: string
+        required: false
+        description: >-
+          The exact words the person wants on the meme, in the order they gave
+          them, with " / " between the words for each panel or line (top text
+          first). For example "doing homework / building a pippa app". Do not
+          add, improve or invent any words. If they gave no words for the
+          meme, return an empty string.
+    output:
+      - name: name
+        type: string
+        description: The meme that was used.
+      - name: image_url
+        type: string
+        description: A link to the finished meme picture with the words on it.
+      - name: panels
+        type: integer
+        description: How many places for text this meme has.
+      - name: panels_filled
+        type: integer
+        description: How many of them got words.
 
 # ── API keys your app needs (this example needs none) ────────────────────────
 #

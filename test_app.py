@@ -11,14 +11,14 @@ from datetime import datetime, timezone
 import pytest
 from pippa_agentapp_sdk import LocalRunner, OutputShapeViolation
 
-from app import MEMES, App, NoDescription, NoMatchingMeme
+from app import MEMES, App, NoCaption, NoDescription, NoMatchingMeme, encode_line
 
 NOW = datetime(2026, 11, 20, 12, 0, tzinfo=timezone.utc)
 
 
-def call(inputs: dict, *, explicit: bool = False):
+def call(inputs: dict, outcome: str = "meme.find", *, explicit: bool = False):
     return LocalRunner(App()).call(
-        "meme.find", inputs, granted_secrets={}, now=NOW, request_id="test-1",
+        outcome, inputs, granted_secrets={}, now=NOW, request_id="test-1",
         explicit=explicit,
     ).result
 
@@ -26,7 +26,7 @@ def call(inputs: dict, *, explicit: bool = False):
 def test_the_manifest_is_valid():
     app = App()
     assert app.manifest.app_id.startswith("hack.")
-    assert [o.id for o in app.manifest.outcomes] == ["meme.find"]
+    assert [o.id for o in app.manifest.outcomes] == ["meme.find", "meme.make"]
 
 
 def test_the_catalogue_is_well_formed():
@@ -35,6 +35,7 @@ def test_the_catalogue_is_well_formed():
     for meme in MEMES:
         assert meme["image_url"].startswith("https://i.imgflip.com/")
         assert meme["name"] and meme["shows"] and meme["use"] and meme["keywords"]
+        assert isinstance(meme["lines"], int) and meme["lines"] >= 1
 
 
 @pytest.mark.parametrize("description, expected", [
@@ -94,3 +95,81 @@ def test_the_runner_enforces_the_manifest(monkeypatch):
     monkeypatch.setattr(App, "handle", lambda self, c: Result(data={"surprise": 1}))
     with pytest.raises(OutputShapeViolation):
         call({"description": "drake"})
+
+
+def make(meme: str, text: str, **kwargs):
+    return call({"meme": meme, "text": text}, "meme.make", **kwargs)
+
+
+def test_it_makes_a_meme_with_panels_in_order():
+    data = make("drake", "doing homework / building a pippa app").data
+    assert data["name"] == "Drake Hotline Bling"
+    assert data["image_url"] == (
+        "https://api.memegen.link/images/drake/doing_homework/building_a_pippa_app.png"
+    )
+    assert data["panels"] == 2
+    assert data["panels_filled"] == 2
+
+
+def test_a_described_meme_is_made_too():
+    data = make("dog in a burning room", "monday morning / this is fine").data
+    assert data["image_url"].startswith("https://api.memegen.link/images/fine/")
+
+
+def test_missing_panels_are_left_blank():
+    data = make("always has been", "wait it's all memes / always has been").data
+    assert data["image_url"].endswith("/_/_.png")
+    assert data["panels"] == 4
+    assert data["panels_filled"] == 2
+
+
+def test_extra_text_goes_on_the_last_panel_rather_than_vanishing():
+    data = make("change my mind", "pineapple / belongs on pizza").data
+    assert data["image_url"].endswith("/pineapple_belongs_on_pizza.png")
+
+
+def test_a_meme_without_a_template_gets_top_and_bottom_text():
+    data = make("skeleton waiting on a bench", "me waiting / for the build").data
+    assert data["image_url"] == (
+        "https://api.memegen.link/images/custom/me_waiting/for_the_build.png"
+        "?background=https%3A%2F%2Fi.imgflip.com%2F2fm6x.jpg"
+    )
+
+
+@pytest.mark.parametrize("raw, encoded", [
+    ("hello world", "hello_world"),
+    ("snake_case", "snake__case"),
+    ("well-known", "well--known"),
+    ("why?", "why~q"),
+    ("100%", "100~p"),
+    ("a & b", "a_~a_b"),
+    ("#1", "~h1"),
+    ('say "hi"', "say_''hi''"),
+    ("", "_"),
+    ("café", "caf%C3%A9"),
+])
+def test_caption_text_is_escaped_for_memegen(raw, encoded):
+    assert encode_line(raw) == encoded
+
+
+def test_making_needs_words():
+    with pytest.raises(NoCaption) as failure:
+        make("drake", "")
+    assert "words" in failure.value.user_message
+    with pytest.raises(NoCaption):
+        make("drake", " / ")
+
+
+def test_making_needs_a_meme():
+    with pytest.raises(NoDescription) as failure:
+        make("", "some words")
+    assert "which meme" in failure.value.user_message
+
+
+def test_making_an_unknown_meme_says_so():
+    with pytest.raises(NoMatchingMeme):
+        make("bananas in pyjamas", "hello / there")
+
+
+def test_making_picked_by_name_works_the_same():
+    assert make("drake", "a / b", explicit=True).data == make("drake", "a / b").data
