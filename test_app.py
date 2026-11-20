@@ -226,3 +226,15 @@ def test_a_topic_picks_from_matching_jokes():
 
 def test_an_unknown_topic_still_gets_a_meme():
     assert call({"topic": "bananas"}, "meme.random").data["image_url"]
+
+
+def test_asking_what_it_can_do_shows_the_starter_meme_and_examples():
+    data = call({}, "meme.list").data
+    assert data["starter_meme_url"] == (
+        "https://api.memegen.link/images/drake/"
+        "doing_my_coursework/building_on_pippa.png"
+    )
+    assert data["starter_meme_caption"] == "doing my coursework / building on pippa"
+    assert "slash" in data["how_it_works"]
+    assert len(data["try_saying"]) >= 4
+    assert data["try_saying"][0].startswith("make a drake meme")

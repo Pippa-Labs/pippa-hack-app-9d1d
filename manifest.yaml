@@ -69,7 +69,7 @@ app:
   # your "latest" version is simply the one you pushed most recently.
   # docs/REVIEW_AND_SHARING.md says which version you, your testers and
   # everybody else get.
-  version: 0.4.4
+  version: 0.4.5
   # One or two sentences, written for someone deciding whether to install it.
   # Say what it does and what it sends anywhere. Never use the word "by" — the
   # badge Pippa shows is parsed from "[via <name> <version> by <author name>]"
@@ -188,12 +188,14 @@ outcomes:
         description: How many of them got words.
 
   - id: meme.list
-    summary: List the memes this app knows and can make
+    summary: Show what memes this app can make, with a starter meme and examples to try
     example_phrases:
+      - what kinds of memes can you make
       - what memes do you have
+      - how does the meme maker work
+      - i don't know any memes
       - which memes do you know
       - list all your memes
-      - what meme options are there
       - which memes are available
       - give me a list of memes
       - what spongebob memes do you have
@@ -213,6 +215,19 @@ outcomes:
       - name: count
         type: integer
         description: How many memes are listed.
+      - name: how_it_works
+        type: string
+        description: One sentence explaining memes, for someone who has never made one.
+      - name: starter_meme_url
+        type: string
+        description: A link to a finished example meme to show first.
+      - name: starter_meme_caption
+        type: string
+        description: The words on the starter meme.
+      - name: try_saying
+        type: array
+        item_type: string
+        description: Example requests that work, to copy and send.
 
   - id: meme.random
     summary: Send a random funny ready-made meme about Imperial student life, London or Pippa

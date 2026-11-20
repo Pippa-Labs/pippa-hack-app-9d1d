@@ -57,6 +57,22 @@ _ESCAPES = [
     (">", "~g"), ('"', "''"),
 ]
 
+#: For people who have never made a meme: what one is, in a sentence.
+HOW_IT_WORKS = (
+    "A meme is a well-known picture with your own words on it: pick one, "
+    "say the words for each part, separated with a slash, top first."
+)
+
+#: Prompts that are known to work, to copy and send.
+TRY_SAYING = [
+    "make a drake meme saying doing my coursework / building on pippa",
+    "generate a funny imperial college meme",
+    "make a this is fine meme saying exam in 9 hours / this is fine",
+    "funny london meme",
+    "make a distracted boyfriend meme saying my warm bed / me / a 9am lecture",
+    "send me the meme picture of the dog in the burning room",
+]
+
 #: Longest caption line worth drawing.
 MAX_LINE = 120
 
@@ -246,12 +262,25 @@ class App:
             f"{meme['name']} ({meme['lines']} panel{'s' if meme['lines'] > 1 else ''})"
             for meme in chosen
         ]
+        starter = JOKES[0]   # Drake: doing my coursework / building on pippa
+        starter_url = (
+            f"{MEMEGEN}{starter['template']}/"
+            + "/".join(encode_line(line) for line in starter["lines"]) + ".png"
+        )
         about = f" about {topic}" if topic else ""
         return Result(
-            data={"memes": listed, "count": len(listed)},
+            data={
+                "memes": listed,
+                "count": len(listed),
+                "how_it_works": HOW_IT_WORKS,
+                "starter_meme_url": starter_url,
+                "starter_meme_caption": " / ".join(starter["lines"]),
+                "try_saying": TRY_SAYING,
+            },
             narrative=(
-                f"I know {len(listed)} memes{about}, and can put your words on "
-                "any of them: say \"make a <meme> meme saying top / bottom\"."
+                f"{HOW_IT_WORKS} Here's one to start: {starter_url} "
+                f"I know {len(listed)} memes{about}. Try saying: "
+                f"\"{TRY_SAYING[0]}\" or \"{TRY_SAYING[1]}\"."
             ),
         )
 
